@@ -1,6 +1,46 @@
  HEAD
 Markdown
 
+Running playbooks
+To run your playbook, use the ansible-playbook command.
+
+ansible-playbook playbook.yml -f 10
+Use the --verbose flag when running your playbook to see detailed output from successful and unsuccessful tasks.
+
+Running playbooks in check mode
+The Ansible check mode allows you to execute a playbook without applying any alterations to your systems. You can use check mode to test playbooks before you implement them in a production environment.
+
+To run a playbook in check mode, pass the -C or --check flag to the ansible-playbook command:
+
+ansible-playbook --check playbook.yaml
+Executing this command runs the playbook normally. Instead of implementing any modifications, Ansible provides a report on the changes it would have made. This report includes details such as file modifications, command execution, and module calls.
+
+Check mode offers a safe and practical approach to examine the functionality of your playbooks without risking unintended changes to your systems. Check mode is also a valuable tool for troubleshooting playbooks that are not functioning as expected.
+
+Ansible-Pull
+You can invert the Ansible architecture so that nodes check in to a central location instead of you pushing configuration out to them.
+
+The ansible-pull command is a small script that checks out a repo of configuration instructions from git and then runs ansible-playbook against that content.
+
+If you load balance your checkout location, ansible-pull scales infinitely.
+
+Run ansible-pull --help for details.
+
+Verifying playbooks
+You may want to verify your playbooks to catch syntax errors and other problems before you run them. The ansible-playbook command offers several options for verification, including --check, --diff, --list-hosts, --list-tasks, and --syntax-check. The Tools for validating playbooks topic describes other tools for validating and testing playbooks.
+
+ansible-lint
+You can use ansible-lint for detailed, Ansible-specific feedback on your playbooks before you execute them. For example, if you run ansible-lint on the playbook called verify-apache.yml near the top of this page, you should get the following results:
+
+$ ansible-lint verify-apache.yml
+[403] Package installs should not use latest
+verify-apache.yml:8
+Task/Handler: ensure apache is at the latest version
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # 🚀 Ansible Playbook Masterclass: A Beginner's Blueprint
 
