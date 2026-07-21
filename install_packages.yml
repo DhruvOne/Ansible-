@@ -1,0 +1,11 @@
+---
+- name: Install Packages
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: Install Package
+      apt:
+        name: tree
+        state: present
+        update_cache: yes
