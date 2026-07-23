@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Engineer & Automation Specialist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --accent-green: #2ea043;
+            --accent-cyan: #58a6ff;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --border-color: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header / Hero */
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(46, 160, 67, 0.15);
+            color: #3fb950;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 0.8rem;
+            border: 1px solid rgba(46, 160, 67, 0.4);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* Terminal Window Component */
+        .terminal {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.2rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        .command { color: var(--accent-cyan); }
+        .output { color: var(--text-main); margin-top: 0.3rem; }
+
+        /* Sections */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h2::before {
+            content: ">";
+            color: var(--accent-green);
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-cyan);
+        }
+
+        .card h3 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* List Items */
+        ul.skill-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        ul.skill-list li {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="tag">● Open to Automation & Infrastructure Projects</span>
+        <h1>DevOps Engineer</h1>
+        <p class="subtitle">B.Tech Student | Cloud & Infrastructure Specialist | Automation Enthusiast</p>
+    </header>
+
+    <!-- Interactive-style Terminal Summary -->
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+        <p><span class="command">devops@system:~$</span> whoami</p>
+        <p class="output">Passionate about infrastructure, Linux system administration, and CI/CD pipelines. Currently focused on automating deployments and building scalable backend workflows.</p>
+    </div>
+
+    <!-- Core Tech Stack -->
+    <section>
+        <h2>Technical Arsenal</h2>
+        <ul class="skill-list">
+            <li>AWS (EC2, S3, VPC)</li>
+            <li>Linux / Bash Scripting</li>
+            <li>Git & Version Control</li>
+            <li>Automation Tools</li>
+            <li>Golang</li>
+            <li>Machine Learning Basics</li>
+        </ul>
+    </section>
+
+    <!-- Key Projects -->
+    <section>
+        <h2>Featured Work</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Smart Attendance System</h3>
+                <p>Designed and structured a real-time security guard attendance tracking model, selecting optimal software engineering lifecycle approaches for reliable operational monitoring.</p>
+            </div>
+            <div class="card">
+                <h3>Infrastructure Automation</h3>
+                <p>Authoring custom shell scripts, virtual environment setups, and Linux CLI configurations to streamline automated local and cloud deployment workflows.</p>
+            </div>
+            <div class="card">
+                <h3>Full-Stack Service Platform</h3>
+                <p>Engineered a service-oriented application focusing on efficient backend architecture, modular layout, and clean service integration.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beyond the Terminal (Interests) -->
+    <section>
+        <h2>Beyond the Terminal</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>FPV Drones & RC Gadgets</h3>
+                <p>Building, tuning, and operating custom remote-controlled hardware and first-person view drone systems.</p>
+            </div>
+            <div class="card">
+                <h3>Technical Cinematography</h3>
+                <p>Exploring fine-tuned portrait photography, realistic texture rendering, and lighting aesthetics with high-end camera configurations.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© Built with clean HTML & CSS • Designed for performance</p>
+    </footer>
+
+</body>
+</html>
