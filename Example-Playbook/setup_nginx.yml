@@ -1,0 +1,25 @@
+---
+- name: setup Nginx with custom file
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: copy the HTML file
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Restart Nginx 
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes
+
+    
