@@ -69,6 +69,13 @@ Everything in the modules below is run **from the control node**.
 
 ---
 
+ 
+## Documentation
+
+- [Ansible Official Documentation](https://docs.ansible.com/)
+- [Ansible Community Documentation](https://docs.ansible.com/ansible/latest/index.html) 
+
+
 ## Course Modules
 
 Live-paced timings for a single ~4-hour session (the last live run covered this in ~4.5h).
