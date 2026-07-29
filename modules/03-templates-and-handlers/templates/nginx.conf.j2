@@ -1,0 +1,24 @@
+# Nginx config — managed by Ansible
+# Template: nginx.conf.j2
+# Deployed to: {{ inventory_hostname }}
+
+server {
+    listen {{ nginx_port }};
+    server_name {{ server_name }};
+    root /var/www/html;
+    index index.html;
+
+    # Server info
+    # Hostname: {{ ansible_facts['hostname'] }}
+    # OS: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}
+    # CPUs: {{ ansible_facts['processor_vcpus'] }}
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /health {
+        return 200 'OK';
+        add_header Content-Type text/plain;
+    }
+}

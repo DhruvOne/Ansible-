@@ -1,0 +1,13 @@
+---
+# Applies to every host in the inventory.
+# group_vars/<group>.yml is auto-loaded by Ansible relative to the inventory file.
+
+env: dev
+
+# Cross-OS safe: same package name on Ubuntu, RHEL 9, and Amazon Linux 2023
+# with no extra repos. (htop needs EPEL on RHEL; installing curl conflicts
+# with curl-minimal on Amazon Linux 2023.)
+common_packages:
+  - vim
+  - tree
+  - wget

@@ -1,0 +1,36 @@
+---
+# Playbook 3: Create a config file using vault secrets
+# Run: ansible-playbook modules/06-vault/03_create_config.yml --vault-password-file ~/.vault_pass.txt
+
+- name: Create application config with secrets
+  hosts: all
+  become: true
+
+  vars_files:
+    - vars/secrets.yml
+
+  tasks:
+    - name: Create config directory
+      file:
+        path: /opt/ansible-vault-demo
+        state: directory
+        mode: '0755'
+
+    - name: Create config file with secrets
+      copy:
+        content: |
+          # App config — managed by Ansible
+          db_user={{ db_user }}
+          db_password={{ db_password }}
+          api_key={{ api_key }}
+        dest: /opt/ansible-vault-demo/app.conf
+        mode: '0600'
+
+    - name: Read back the config file
+      command: cat /opt/ansible-vault-demo/app.conf
+      changed_when: false
+      register: config_content
+
+    - name: Show config contents
+      debug:
+        msg: "{{ config_content.stdout_lines }}"

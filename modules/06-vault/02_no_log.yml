@@ -1,0 +1,27 @@
+---
+# Playbook 2: Hiding secrets in output with no_log
+# Run: ansible-playbook modules/06-vault/02_no_log.yml --vault-password-file ~/.vault_pass.txt
+#
+# Watch the output — compare tasks WITH and WITHOUT no_log!
+
+- name: Compare output with and without no_log
+  hosts: all
+  gather_facts: false
+
+  vars_files:
+    - vars/secrets.yml
+
+  tasks:
+    - name: Print password WITHOUT no_log (BAD — visible in output!)
+      debug:
+        msg: "DB Password: {{ db_password }}"
+
+    - name: Print password WITH no_log (GOOD — output is hidden)
+      debug:
+        msg: "DB Password: {{ db_password }}"
+      no_log: true
+
+    - name: Print API key with no_log
+      debug:
+        msg: "API Key: {{ api_key }}"
+      no_log: true

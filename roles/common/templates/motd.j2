@@ -1,0 +1,7 @@
+============================================
+  Host    : {{ ansible_facts['hostname'] }}
+  IP      : {{ ansible_facts['default_ipv4']['address'] }}
+  OS      : {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}
+  Env     : {{ env | default('unknown') }}
+  Managed : Ansible @ {{ ansible_facts['date_time']['date'] }}
+============================================

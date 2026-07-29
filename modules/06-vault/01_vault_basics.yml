@@ -1,0 +1,23 @@
+---
+# Playbook 1: Load secrets from a vault-encrypted file
+# Run: ansible-playbook modules/06-vault/01_vault_basics.yml --vault-password-file ~/.vault_pass.txt
+
+- name: Load and use vault-encrypted secrets
+  hosts: all
+  gather_facts: false
+
+  vars_files:
+    - vars/secrets.yml
+
+  tasks:
+    - name: Print the database user
+      debug:
+        msg: "DB User: {{ db_user }}"
+
+    - name: Print the database password
+      debug:
+        msg: "DB Password: {{ db_password }}"
+
+    - name: Print the API key
+      debug:
+        msg: "API Key: {{ api_key }}"

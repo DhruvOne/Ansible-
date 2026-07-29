@@ -1,0 +1,15 @@
+---
+# Playbook 1: Test connectivity to all hosts
+# Run: ansible-playbook modules/01-basics/01_ping.yml
+
+- name: Test connectivity to all servers
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Ping all hosts
+      ping:
+
+    - name: Print a success message
+      debug:
+        msg: "Successfully connected to {{ inventory_hostname }}"

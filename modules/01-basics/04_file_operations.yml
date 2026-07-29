@@ -1,0 +1,40 @@
+---
+# Playbook 4: File operations — copy, file, lineinfile
+# Run: ansible-playbook modules/01-basics/04_file_operations.yml
+
+- name: Create files and directories
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Create a directory
+      file:
+        path: /opt/ansible-lab
+        state: directory
+        mode: '0755'
+
+    - name: Create a file with content
+      copy:
+        content: |
+          # Ansible Lab Config
+          app_name=demo
+          environment={{ env | default('dev') }}
+          managed_by=ansible
+        dest: /opt/ansible-lab/config.txt
+        mode: '0644'
+
+    - name: Add a line to the file (idempotent!)
+      lineinfile:
+        path: /opt/ansible-lab/config.txt
+        line: "last_updated={{ ansible_facts['date_time']['date'] }}"
+        regexp: "^last_updated="
+        state: present
+
+    - name: Read the file to verify
+      command: cat /opt/ansible-lab/config.txt
+      changed_when: false
+      register: file_content
+
+    - name: Show file contents
+      debug:
+        msg: "{{ file_content.stdout_lines }}"

@@ -1,0 +1,23 @@
+---
+# Playbook 2: Deploy a dynamic MOTD using templates
+# Run: ansible-playbook modules/03-templates-and-handlers/02_motd_template.yml
+
+- name: Deploy dynamic MOTD
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Deploy MOTD from template
+      template:
+        src: templates/motd.j2
+        dest: /etc/motd
+        mode: '0644'
+
+    - name: Verify MOTD content
+      command: cat /etc/motd
+      changed_when: false
+      register: motd_content
+
+    - name: Show MOTD
+      debug:
+        msg: "{{ motd_content.stdout }}"

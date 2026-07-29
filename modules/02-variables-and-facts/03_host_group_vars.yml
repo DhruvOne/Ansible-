@@ -1,0 +1,31 @@
+---
+# Playbook 3: Using group_vars and host_vars
+# Run: ansible-playbook modules/02-variables-and-facts/03_host_group_vars.yml
+#
+# This playbook reads variables from:
+#   inventories/dev/group_vars/all.yml     -> env, common_packages
+#   inventories/dev/group_vars/ubuntu.yml  -> package_manager
+#   inventories/dev/group_vars/redhat.yml  -> package_manager
+#   inventories/dev/host_vars/control-node-ubuntu.yml -> is_master
+
+- name: Read variables from group_vars and host_vars
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Print environment (from group_vars/all.yml)
+      debug:
+        msg: "Environment: {{ env }}"
+
+    - name: Print package manager (from OS group_vars)
+      debug:
+        msg: "Package manager: {{ package_manager }}"
+
+    - name: Print common packages list
+      debug:
+        msg: "Common packages: {{ common_packages }}"
+
+    - name: Check if this is the master node
+      debug:
+        msg: "This is the MASTER node!"
+      when: is_master | default(false)

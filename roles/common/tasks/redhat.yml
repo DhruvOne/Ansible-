@@ -1,0 +1,6 @@
+---
+- name: Install common packages (RedHat/Amazon)
+  dnf:
+    name: "{{ common_packages }}"
+    state: present
+  become: true

@@ -1,0 +1,37 @@
+---
+# Playbook 1: Working with variables
+# Run: ansible-playbook modules/02-variables-and-facts/01_simple_variables.yml
+
+- name: Working with inline variables
+  hosts: all
+  gather_facts: false
+
+  vars:
+    greeting: "Hello from Ansible"
+    course_name: "TrainWithShubham Ansible Course"
+    server_count: 4
+
+  tasks:
+    - name: Print greeting
+      debug:
+        msg: "{{ greeting }}"
+
+    - name: Print course info
+      debug:
+        msg: "Welcome to {{ course_name }}! We have {{ server_count }} servers."
+
+    - name: Use variable in a task
+      debug:
+        msg: "Running on host: {{ inventory_hostname }}"
+
+- name: Using vars_files
+  hosts: all
+  gather_facts: false
+
+  vars_files:
+    - vars/packages.yml
+
+  tasks:
+    - name: Print packages from external file
+      debug:
+        msg: "Packages to install: {{ base_packages }}"

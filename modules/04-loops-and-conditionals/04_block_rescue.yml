@@ -1,0 +1,39 @@
+---
+# Playbook 4: Error handling with block/rescue/always
+# Run: ansible-playbook modules/04-loops-and-conditionals/04_block_rescue.yml
+
+- name: Handle errors with block/rescue/always
+  hosts: ubuntu
+  become: true
+
+  tasks:
+    - name: Try to perform a risky operation
+      block:
+        - name: Try to start a non-existent service
+          service:
+            name: fake-service-that-does-not-exist
+            state: started
+
+        - name: This task will be SKIPPED (block fails above)
+          debug:
+            msg: "This will never print"
+
+      rescue:
+        - name: Handle the error gracefully
+          debug:
+            msg: "RESCUE — The service failed to start, but we caught the error!"
+
+        - name: Log the failure
+          copy:
+            content: "Service start failed at {{ ansible_facts['date_time']['iso8601'] }}\n"
+            dest: /tmp/ansible-error.log
+            mode: '0644'
+
+      always:
+        - name: This ALWAYS runs (success or failure)
+          debug:
+            msg: "ALWAYS — Cleanup step runs regardless of success or failure"
+
+    - name: Playbook continues after block/rescue/always
+      debug:
+        msg: "The playbook continues normally after error handling"

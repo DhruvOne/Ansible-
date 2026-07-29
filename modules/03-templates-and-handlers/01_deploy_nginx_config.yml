@@ -1,0 +1,48 @@
+---
+# Playbook 1: Deploy nginx with templates and handlers
+# Run: ansible-playbook modules/03-templates-and-handlers/01_deploy_nginx_config.yml
+
+- name: Deploy Nginx with templates
+  hosts: ubuntu
+  become: true
+
+  vars:
+    nginx_port: 80
+    server_name: "{{ ansible_facts['hostname'] }}"
+
+  tasks:
+    - name: Install nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: Deploy nginx configuration from template
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/conf.d/ansible-lab.conf
+        mode: '0644'
+      notify: Reload Nginx
+
+    - name: Deploy landing page from template
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Deploy a static file (compare with template above)
+      copy:
+        src: files/custom_index.html
+        dest: /var/www/html/static.html
+        mode: '0644'
+
+    - name: Start and enable nginx
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded

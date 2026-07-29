@@ -1,0 +1,41 @@
+---
+# Playbook 1: Basic loops
+# Run: ansible-playbook modules/04-loops-and-conditionals/01_loops_basics.yml
+
+- name: Install packages and create directories using loops
+  hosts: all
+  become: true
+
+  vars:
+    packages_to_install:
+      - tree
+      - git
+      - wget
+      - unzip
+
+  tasks:
+    - name: Install multiple packages using a loop
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages_to_install }}"
+
+    - name: Create multiple directories
+      file:
+        path: "/opt/ansible-lab/{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - logs
+        - config
+        - data
+        - backups
+
+    - name: Show what directories were created
+      command: ls -la /opt/ansible-lab/
+      changed_when: false
+      register: dir_listing
+
+    - name: Print directory listing
+      debug:
+        msg: "{{ dir_listing.stdout_lines }}"

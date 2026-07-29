@@ -1,0 +1,31 @@
+---
+# Playbook 3: Multi-OS conditionals with blocks
+# Run: ansible-playbook modules/04-loops-and-conditionals/03_conditionals_multi_os.yml
+
+- name: Multi-OS conditional blocks
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Debian/Ubuntu specific tasks
+      block:
+        - name: Update apt cache
+          apt:
+            update_cache: true
+            cache_valid_time: 3600
+
+        - name: Print Debian message
+          debug:
+            msg: "Running on {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: RedHat/Amazon specific tasks
+      block:
+        - name: Print RedHat message
+          debug:
+            msg: "Running on {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Common tasks for all OS
+      debug:
+        msg: "OS family: {{ ansible_facts['os_family'] }}, Package manager: {{ package_manager }}"

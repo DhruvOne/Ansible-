@@ -1,0 +1,64 @@
+---
+# Playbook 5: Tags for selective execution
+# Run examples:
+#   ansible-playbook modules/04-loops-and-conditionals/05_tags_demo.yml --tags install
+#   ansible-playbook modules/04-loops-and-conditionals/05_tags_demo.yml --tags configure
+#   ansible-playbook modules/04-loops-and-conditionals/05_tags_demo.yml --tags verify
+#   ansible-playbook modules/04-loops-and-conditionals/05_tags_demo.yml --skip-tags install
+#   ansible-playbook modules/04-loops-and-conditionals/05_tags_demo.yml --list-tags
+
+- name: Install and configure nginx with tags
+  hosts: ubuntu
+  become: true
+
+  tasks:
+    - name: Install nginx
+      package:
+        name: nginx
+        state: present
+      tags:
+        - install
+        - nginx
+
+    - name: Deploy nginx config
+      copy:
+        content: |
+          server {
+              listen 80;
+              server_name _;
+              root /var/www/html;
+          }
+        dest: /etc/nginx/conf.d/demo.conf
+        mode: '0644'
+      tags:
+        - configure
+        - nginx
+      notify: Reload Nginx
+
+    - name: Deploy index page
+      copy:
+        content: "<h1>Tagged deployment on {{ ansible_facts['hostname'] }}</h1>"
+        dest: /var/www/html/tagged.html
+        mode: '0644'
+      tags:
+        - configure
+        - content
+
+    - name: Verify nginx is running
+      command: systemctl is-active nginx
+      changed_when: false
+      register: nginx_status
+      tags:
+        - verify
+
+    - name: Print nginx status
+      debug:
+        msg: "Nginx status: {{ nginx_status.stdout }}"
+      tags:
+        - verify
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded

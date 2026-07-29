@@ -1,0 +1,51 @@
+---
+# Playbook 3: How handlers work
+# Run this twice — the handler only fires on the first run (when changes occur).
+# Run: ansible-playbook modules/03-templates-and-handlers/03_handlers_demo.yml
+
+- name: Deploy configs and trigger handler
+  hosts: ubuntu
+  become: true
+
+  vars:
+    # Valid nginx http-context tuning — files in conf.d are parsed by nginx,
+    # so they must be real config or the reload handler will fail.
+    app_config_content: |
+      # Application tuning — managed by Ansible (env: {{ env | default('dev') }})
+      client_max_body_size 16m;
+
+  tasks:
+    - name: Ensure nginx is installed
+      package:
+        name: nginx
+        state: present
+
+    - name: Deploy application config (notifies handler)
+      copy:
+        content: "{{ app_config_content }}"
+        dest: /etc/nginx/conf.d/app.conf
+        mode: '0644'
+      notify:
+        - Reload Nginx
+        - Log config change
+
+    - name: Deploy another config file (also notifies same handler)
+      copy:
+        content: "# Extra config\nkeepalive_timeout 65;\n"
+        dest: /etc/nginx/conf.d/extra.conf
+        mode: '0644'
+      notify: Reload Nginx
+
+    - name: This task does NOT notify anything
+      debug:
+        msg: "Both tasks above notify 'Reload Nginx' but it only runs ONCE"
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
+
+    - name: Log config change
+      debug:
+        msg: "Configuration was changed — nginx will be reloaded"

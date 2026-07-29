@@ -1,0 +1,50 @@
+---
+# Playbook 2: Looping over dictionaries
+# Run: ansible-playbook modules/04-loops-and-conditionals/02_loops_dict.yml
+
+- name: Create config files using dictionary loops
+  hosts: all
+  become: true
+
+  vars:
+    config_files:
+      - name: app.conf
+        content: "app_port=8080"
+        dest: /tmp/ansible-lab
+      - name: db.conf
+        content: "db_host=localhost"
+        dest: /tmp/ansible-lab
+      - name: log.conf
+        content: "log_level=info"
+        dest: /tmp/ansible-lab
+
+  tasks:
+    - name: Create config directory
+      file:
+        path: /tmp/ansible-lab
+        state: directory
+        mode: '0755'
+
+    - name: Create config files from dictionary
+      copy:
+        content: "{{ item.content }}\n"
+        dest: "{{ item.dest }}/{{ item.name }}"
+        mode: '0644'
+      loop: "{{ config_files }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Read back the files
+      command: "cat {{ item.dest }}/{{ item.name }}"
+      changed_when: false
+      register: file_contents
+      loop: "{{ config_files }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Print file contents
+      debug:
+        msg: "{{ item.item.name }}: {{ item.stdout }}"
+      loop: "{{ file_contents.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"

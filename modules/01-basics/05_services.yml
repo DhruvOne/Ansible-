@@ -1,0 +1,28 @@
+---
+# Playbook 5: Managing services
+# Run: ansible-playbook modules/01-basics/05_services.yml
+
+- name: Manage services on Ubuntu
+  hosts: ubuntu
+  become: true
+
+  tasks:
+    - name: Ensure cron service is installed
+      package:
+        name: cron
+        state: present
+
+    - name: Start and enable cron service
+      service:
+        name: cron
+        state: started
+        enabled: true
+
+    - name: Check cron service status
+      command: systemctl status cron
+      changed_when: false
+      register: cron_status
+
+    - name: Print service status
+      debug:
+        msg: "{{ cron_status.stdout_lines[:5] }}"

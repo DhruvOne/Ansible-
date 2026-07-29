@@ -1,0 +1,33 @@
+---
+# Playbook 2: Register and Debug
+# Run: ansible-playbook modules/02-variables-and-facts/02_register_debug.yml
+
+- name: Capture and print command output
+  hosts: all
+
+  tasks:
+    - name: Get hostname
+      command: hostname
+      changed_when: false
+      register: hostname_result
+
+    - name: Print full registered variable
+      debug:
+        var: hostname_result
+
+    - name: Print just stdout
+      debug:
+        msg: "Hostname is: {{ hostname_result.stdout }}"
+
+    - name: Print return code
+      debug:
+        msg: "Return code was: {{ hostname_result.rc }}"
+
+    - name: Get disk usage
+      command: df -h /
+      changed_when: false
+      register: disk_usage
+
+    - name: Print disk usage lines
+      debug:
+        msg: "{{ disk_usage.stdout_lines }}"
