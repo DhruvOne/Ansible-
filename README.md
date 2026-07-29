@@ -1,4 +1,4 @@
-# Ansible In One Shot — TrainWithShubham
+# Ansible In One Shot 
 
 Learn Ansible hands-on with real AWS infrastructure provisioned by Terraform.
 Scratch → pro in a single ~4-hour live session.
@@ -183,6 +183,4 @@ cd terraform && terraform destroy -auto-approve
 
 ---
 
-## Maintainer
 
-**Shubham Londhe** — [TrainWithShubham](https://github.com/LondheShubham153)
