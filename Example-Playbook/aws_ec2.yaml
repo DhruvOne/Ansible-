@@ -1,0 +1,14 @@
+---
+plugin: amazon.aws.aws_ec2          # Use the AWS EC2 dynamic inventory plugin
+regions:
+ - ap-south-1                       # Only search this AWS region
+filters:
+  tag:Environment: dev              # Only include instances tagged Environment=dev
+  instance-state-name: running      # Only include instances that are currently running
+compose:
+  ansible_host: public_ip_address   # Use the public IP as the SSH address for each host
+keyed_groups:
+ - key: tags.Name                   # Group hosts by their Name tag
+   prefix: name                     # Resulting group looks like name_web-01
+ - key: tags.Environment            # Group hosts by their Environment tag
+   prefix: env                      # Resulting group looks like env_dev

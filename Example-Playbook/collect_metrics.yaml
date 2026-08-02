@@ -1,0 +1,36 @@
+- name: Collect VM metrics
+  hosts: env_dev                          # Target hosts in the env_dev group (tagged Environment=dev)
+  become: true                             # Run tasks as root (needed to install packages)
+  gather_facts: true                       # Collect host facts like OS family
+  tasks:
+    - name: Install sysstat (for mpstat)
+      apt:
+        name: sysstat
+        state: present
+      when: ansible_os_family == "Debian"  # Only run on Ubuntu/Debian hosts
+
+    - name: Install sysstat (RedHat/CentOS)
+      yum:
+        name: sysstat
+        state: present
+      when: ansible_os_family == "RedHat"  # Only run on RedHat/CentOS/Amazon Linux hosts
+
+    - name: Get CPU usage via mpstat
+      shell: "mpstat 1 1 | awk '/Average/ && $NF ~ /[0-9.]+/ {print 100 - $NF}'"
+      register: cpu_usage                  # Save output (100 - idle% = CPU used%) for later use
+
+    - name: Get memory usage
+      shell: "free | awk '/Mem/{printf(\"%.2f\", $3/$2 * 100.0)}'"
+      register: mem_usage                  # Save output (used/total * 100 = memory used%)
+
+    - name: Get disk usage
+      shell: "df / | awk 'NR==2 {print $5}' | tr -d '%'"
+      register: disk_usage                 # Save output (Use% of root filesystem, % stripped)
+
+    - name: Set metrics fact
+      set_fact:
+        vm_metrics:
+          hostname: "{{ inventory_hostname }}"                        # This host's name
+          cpu: "{{ cpu_usage.stdout | float | round(2) }}"            # CPU usage, rounded to 2 decimals
+          mem: "{{ mem_usage.stdout | float | round(2) }}"            # Memory usage, rounded to 2 decimals
+          disk: "{{ disk_usage.stdout | float | round(2) }}"          # Disk usage, rounded to 2 decimals

@@ -1,0 +1,2 @@
+- import_playbook: collect_metrics.yaml   # Step 1: gather CPU, memory, and disk usage from every host
+- import_playbook: send_report.yaml       # Step 2: combine all hosts' metrics and email the report

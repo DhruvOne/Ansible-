@@ -1,0 +1,25 @@
+- name: Send consolidated VM report
+  hosts: localhost                          # Run on the control node, not the EC2 hosts
+  gather_facts: true                        # Needed for ansible_date_time used below
+  vars:
+    collected_metrics: >-                   # Build one list of every host's vm_metrics
+      {{
+        hostvars |
+        dict2items |
+        selectattr('value.vm_metrics', 'defined') |
+        map(attribute='value.vm_metrics') |
+        list
+      }}
+    timestamp: "{{ ansible_date_time.date }} {{ ansible_date_time.time }}"              # Report generation time
+    subject_line: "📊 VM Report – {{ ansible_date_time.date }} {{ ansible_date_time.hour }}:{{ ansible_date_time.minute }}"  # Email subject line
+  tasks:
+    - name: Send animated HTML report via email
+      mail:
+        host: "{{ smtp_server }}"           # SMTP server (from encrypted group_vars)
+        port: "{{ smtp_port }}"             # SMTP port (from encrypted group_vars)
+        username: "{{ email_user }}"        # SMTP login username
+        password: "{{ email_pass }}"        # SMTP login password
+        to: "{{ alert_recipient }}"         # Who receives the report
+        subject: "{{ subject_line }}"       # Uses the subject built above
+        body: "{{ lookup('template', 'templates/report_email_animated.html.j2') }}"   # Renders the HTML template with collected_metrics
+        subtype: html                       # Send as HTML, not plain text
