@@ -1,0 +1,18 @@
+- name: Check connectivity to all dev EC2 hosts
+  hosts: env_dev
+  gather_facts: false
+  tasks:
+
+    - name: Ping host (Ansible module, not ICMP)
+      ansible.builtin.ping:
+      register: ping_result
+
+    - name: Report reachable host
+      debug:
+        msg: "✅ {{ inventory_hostname }} is reachable"
+      when: ping_result is succeeded
+
+    - name: Report unreachable host
+      debug:
+        msg: "❌ {{ inventory_hostname }} did NOT respond"
+      when: ping_result is failed
