@@ -1,0 +1,34 @@
+- name: Free up disk space on dev EC2 hosts
+  hosts: env_dev
+  become: true
+  gather_facts: true
+  tasks:
+
+    - name: Get current disk usage
+      shell: "df / | awk 'NR==2 {print $5}' | tr -d '%'"
+      register: disk_usage
+      changed_when: false
+
+    - name: Clean apt cache (Debian/Ubuntu)
+      apt:
+        autoclean: true
+        autoremove: true
+      when:
+        - ansible_os_family == "Debian"
+        - disk_usage.stdout | int >= 70
+
+    - name: Clean yum cache (RedHat/CentOS)
+      command: yum clean all
+      when:
+        - ansible_os_family == "RedHat"
+        - disk_usage.stdout | int >= 70
+
+    - name: Vacuum old journal logs older than 7 days
+      command: journalctl --vacuum-time=7d
+      when: disk_usage.stdout | int >= 70
+
+    - name: Report result
+      debug:
+        msg: >-
+          {{ inventory_hostname }} was at {{ disk_usage.stdout }}% disk usage —
+          {{ 'cleanup ran' if disk_usage.stdout | int >= 70 else 'no cleanup needed' }}
